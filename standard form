@@ -1,0 +1,14 @@
+clc
+clear all
+c=[3 5]
+a=[1 2;1 1;0 1]
+b=[2000;1500;600]
+sign=[0 0 1]
+s=eye(3)
+i=find(sign>0)
+s(i,:)=-s(i,:)
+objfns=array2table(c)
+objfns.Properties.VariableNames(1:2)={'x1','x2'}
+m=[a s b]
+constraints=array2table(m)
+constraints.Properties.VariableNames(1:6)={'x1','x2','s1','s2','s3','b'}
