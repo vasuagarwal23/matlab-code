@@ -1,0 +1,50 @@
+clc
+clear all
+%phase1
+c = [3 2];
+a = [2 4;3 5];
+b = [8; 15];
+%phase2
+x = 0:1:max(b);
+y1 = (b(1) - a(1,1).*x)/a(1,2); 
+y1 = max(0,y1);
+y2 = (b(2) - a(2,1).*x)/a(2,2); 
+y2 = max(0,y2); plot(x,y1,'r',x,y2,'b')
+%corner points
+cx = find(x==0);
+cy1 = find(y1==0);
+cy2 = find(y2==0);
+p1 = [x([cx cy1]);y1([cx cy1])]';
+p2 = [x([cx cy2]);y2([cx cy2])]'; 
+p = [p1;p2];
+pp = unique(p,'rows') 
+%intersection points
+X = [0;0];
+for i = 1:size(a,1)
+A1 = a(i,:);
+B1 = b(i);
+for j = 1+i:size(a,1)
+A2 = a(j,:); B2 = b(j);
+AA = [A1;A2]; 
+BB = [B1;B2]; 
+XX = AA\BB;
+I = [XX X]'
+end
+end
+%all coener and intersection points
+allpts = [pp;I];
+uall = unique(allpts,'rows')
+%feasible region
+for i=1:size(uall,1)
+const1(i)=a(1,1)*uall(i,1)+a(1,2)*uall(i,2)-b(1);
+const2(i)=a(2,1)*uall(i,1)+a(2,2)*uall(i,2)-b(2);
+s1=find(const1<0);
+s2=find(const2<0);
+end
+S=unique([s1 s2]) 
+uall(S,:)=[]
+value=uall*c' 
+table=[uall value]
+M = max(table(:,3)); m = min(table(:,3));
+fprintf('Maximum value of given objective function is %d',M) 
+fprintf('\n Minimum value of given objective function is %d',m)
